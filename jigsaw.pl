@@ -33,3 +33,7 @@ xor(0, 1).
 % xorlist(?A, ?B) is true iff all the pairwise elements of lists A and B are true under the xor predicate defined above
 xorlist([], []).
 xorlist([H1|T1], [H2|T2]) :- xor(H1, H2), xorlist(T1, T2).
+
+% range(+Min, +Max, -Val) unifies Val with Min on the first evaluation and then all values up to Max - 1 on backtracking
+range(Min, Max, Min) :- Max > Min.
+range(Min, Max, Val) :- N is Min + 1, Max > N, range(N, Max, Val).
