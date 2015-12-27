@@ -29,3 +29,7 @@ reverse([H|T], B) :- reverse(T, RT), append(RT, [H], B).
 % xor(?A, ?B) is true iff A xor B
 xor(1, 0).
 xor(0, 1).
+
+% xorlist(?A, ?B) is true iff all the pairwise elements of lists A and B are true under the xor predicate defined above
+xorlist([], []).
+xorlist([H1|T1], [H2|T2]) :- xor(H1, H2), xorlist(T1, T2).
