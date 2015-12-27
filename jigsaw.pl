@@ -46,3 +46,11 @@ flipped([P, [S0, S1, S2, S3]], [P, [FS0, FS1, FS2, FS3]]) :-
 	reverse(S2, FS2),
 	reverse(S3, FS1).
 % flipped checks if P is a valid piece and then unifies the top and bottom sides of FP with the reverse (mirror) of the same sides in P and unifies the left and right sides of FP with the reverse of the opposing sides in P.
+
+% orientation(+P, ?O, -OP) is true iff OP is piece P in orientation O
+orientation(P, O, OP) :- piece(P), rotations(P, O, OP).
+orientation(P, O, OP) :- piece(P), flipped(P, FP), rotations(FP, O, OP).
+
+rotations([P, [S0, S1, S2, S3]], O, [P, [OS0, OS1, OS2, OS3]]) :-
+	range(0, 4, O),
+	rotate([S0, S1, S2, S3], O, [OS0, OS1, OS2, OS3]).
