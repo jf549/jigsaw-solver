@@ -37,3 +37,12 @@ xorlist([H1|T1], [H2|T2]) :- xor(H1, H2), xorlist(T1, T2).
 % range(+Min, +Max, -Val) unifies Val with Min on the first evaluation and then all values up to Max - 1 on backtracking
 range(Min, Max, Min) :- Max > Min.
 range(Min, Max, Val) :- N is Min + 1, Max > N, range(N, Max, Val).
+
+% flipped(+P, ?FP) is true iff piece FP is piece P flipped
+flipped([P, [S0, S1, S2, S3]], [P, [FS0, FS1, FS2, FS3]]) :-
+	piece([P, [S0, S1, S2, S3]]),
+	reverse(S0, FS0),
+	reverse(S1, FS3),
+	reverse(S2, FS2),
+	reverse(S3, FS1).
+% flipped checks if P is a valid piece and then unifies the top and bottom sides of FP with the reverse (mirror) of the same sides in P and unifies the left and right sides of FP with the reverse of the opposing sides in P.
