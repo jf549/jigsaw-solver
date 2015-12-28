@@ -57,7 +57,6 @@ rotations([P, [S0, S1, S2, S3]], O, [P, [OS0, OS1, OS2, OS3]]) :-
 
 % compatible(+P1, +Side1, +P2, +Side2) is true iff Side1 of piece P1 can be plugged into Side2 of P2
 compatible([_, Sides1], Side1, [_, Sides2], Side2) :-
-	nth0(Side1, Sides1, S1),
-	nth0(Side2, Sides2, S2),
-	reverse(S1, RS1),
-	xorlist(RS1, S2).
+	nth0(Side1, Sides1, [_, F1, F2, F3, F4, _]),
+	nth0(Side2, Sides2, [_, F5, F6, F7, F8, _]),
+	xorlist([F4, F3, F2, F1], [F5, F6, F7, F8]).
