@@ -54,3 +54,10 @@ orientation(P, O, OP) :- piece(P), flipped(P, FP), rotations(FP, O, OP).
 rotations([P, [S0, S1, S2, S3]], O, [P, [OS0, OS1, OS2, OS3]]) :-
 	range(0, 4, O),
 	rotate([S0, S1, S2, S3], O, [OS0, OS1, OS2, OS3]).
+
+% compatible(+P1, +Side1, +P2, +Side2) is true iff Side1 of piece P1 can be plugged into Side2 of P2
+compatible([_, Sides1], Side1, [_, Sides2], Side2) :-
+	nth0(Side1, Sides1, S1),
+	nth0(Side2, Sides2, S2),
+	reverse(S1, RS1),
+	xorlist(RS1, S2).
