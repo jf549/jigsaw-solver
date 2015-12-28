@@ -59,3 +59,10 @@ compatible([_, Sides1], Side1, [_, Sides2], Side2) :-
 	nth0(Side1, Sides1, [_, F1, F2, F3, F4, _]),
 	nth0(Side2, Sides2, [_, F5, F6, F7, F8, _]),
 	xorlist([F4, F3, F2, F1], [F5, F6, F7, F8]).
+
+% compatible_corner(+P1, +Side1, +P2, +Side2, +P3, +Side3) is true iff there is exactly one finger in the first position of each given side of each given piece
+compatible_corner([_, Sides1], Side1, [_, Sides2], Side2, [_, Sides3], Side3) :-
+	nth0(Side1, Sides1, [H1|_]),
+	nth0(Side2, Sides2, [H2|_]),
+	nth0(Side3, Sides3, [H3|_]),
+	1 is H1 + H2 + H3.
