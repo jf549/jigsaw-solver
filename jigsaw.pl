@@ -62,3 +62,50 @@ compatible_corner([_, Sides1], Side1, [_, Sides2], Side2, [_, Sides3], Side3) :-
 	nth0(Side2, Sides2, [H2|_]),
 	nth0(Side3, Sides3, [H3|_]),
 	1 is H1 + H2 + H3.
+
+% puzzle(+Ps, ?S) is true iff S is a valid solution to the puzzle with pieces Ps
+puzzle([P0|Tp], [[P0, 0]|Ts]) :- !, permutation(Tp, Tp1), check_solution([P0|Tp1], [[P0, 0]|Ts]).
+puzzle(P, [[P0, O0]|Ts]) :- permutation(P, P1), range(-4, 4, O0), check_solution(P1, [[P0, O0]|Ts]).
+
+check_solution([P0, P1, P2, P3, P4, P5], [[P0, O0], [P1, O1], [P2, O2], [P3, O3], [P4, O4], [P5, O5]]) :-
+	range(-4, 4, O1),
+	range(-4, 4, O2),
+	range(-4, 4, O3),
+	range(-4, 4, O4),
+	range(-4, 4, O5),
+	
+	orientation(P0, O0, OP0),
+	orientation(P1, O1, OP1),
+	orientation(P2, O2, OP2),
+	orientation(P3, O3, OP3),
+	orientation(P4, O4, OP4),
+	orientation(P5, O5, OP5),
+	
+	compatible(OP0, 2, OP1, 0),
+	compatible(OP0, 3, OP2, 0),
+	compatible(OP1, 3, OP2, 1),
+	compatible(OP0, 1, OP3, 0),
+	compatible(OP1, 1, OP3, 3),
+	compatible(OP1, 2, OP4, 0),
+	compatible(OP2, 2, OP4, 3),
+	compatible(OP3, 2, OP4, 1),
+	compatible(OP4, 2, OP5, 0),
+	compatible(OP2, 3, OP5, 3),
+	compatible(OP0, 0, OP5, 2),
+	compatible(OP3, 1, OP5, 1),
+	
+	compatible_corner(OP0, 3, OP1, 0, OP2, 1),
+	compatible_corner(OP0, 2, OP1, 1, OP3, 0),
+	compatible_corner(OP2, 2, OP1, 3, OP4, 0),
+	compatible_corner(OP3, 3, OP1, 2, OP4, 1),
+	compatible_corner(OP5, 0, OP4, 3, OP2, 3),
+	compatible_corner(OP5, 1, OP4, 2, OP3, 2),
+	compatible_corner(OP5, 2, OP0, 1, OP3, 1),
+	compatible_corner(OP5, 3, OP0, 0, OP2, 0),
+	
+	format('~w at ~w~n', [P0, O0]),
+	format('~w at ~w~n', [P1, O1]),
+	format('~w at ~w~n', [P2, O2]),
+	format('~w at ~w~n', [P3, O3]),
+	format('~w at ~w~n', [P4, O4]),
+	format('~w at ~w~n', [P5, O5]).
