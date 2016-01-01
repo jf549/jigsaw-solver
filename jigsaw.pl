@@ -23,8 +23,10 @@ false.
 */
 
 % reverse(?A, ?B) is true iff elements in list A are in reverse order when compared to elements in list B
-reverse([], []).
-reverse([H|T], B) :- reverse(T, RT), append(RT, [H], B).
+reverse([], B, B).
+reverse([H|T], B, Acc) :- reverse(T, B, [H|Acc]).
+
+reverse(A, B) :- reverse(A, B, []).
 
 % xor(?A, ?B) is true iff A xor B
 xor(1, 0).
