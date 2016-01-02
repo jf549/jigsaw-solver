@@ -11,6 +11,7 @@ split(A, 0, [], A).
 split([H|T], N, [H|L], R) :- N > 0, N1 is N - 1, split(T, N1, L, R).
 
 % rotate(+A, +N, ?B) is true iff list B is the list A rotated left by N elements
+% rotate/3 works by splitting list A at the Nth position and then appending the front to the back.
 rotate(A, N, B) :- split(A, N, L, R), append(R, L, B).
 /*
 ?- rotate([1,2,3], 1, [2,3,1]).
@@ -39,21 +40,22 @@ xorlist([H1|T1], [H2|T2]) :- xor(H1, H2), xorlist(T1, T2).
 
 % range(+Min, +Max, ?Val) unifies Val with Min on the first evaluation and then all values up to Max - 1 on backtracking
 range(Min, Max, Min) :- Max > Min.
-range(Min, Max, Val) :- N is Min + 1, Max > N, range(N, Max, Val).
+range(Min, Max, Val) :- Min1 is Min + 1, Max > Min1, range(Min1, Max, Val).
 
 % flipped(+P, ?FP) is true iff piece FP is piece P flipped
+% flipped/2 unifies the top and bottom sides of FP with the reverse (mirror) of the same sides in P and unifies the left and right sides of FP with the reverse of the opposing sides in P.
 flipped([P, [S0, S1, S2, S3]], [P, [FS0, FS1, FS2, FS3]]) :-
 	reverse(S0, FS0),
 	reverse(S1, FS3),
 	reverse(S2, FS2),
 	reverse(S3, FS1).
-% flipped checks if P is a valid piece and then unifies the top and bottom sides of FP with the reverse (mirror) of the same sides in P and unifies the left and right sides of FP with the reverse of the opposing sides in P.
 
 % orientation(+P, ?O, -OP) is true iff OP is piece P in orientation O
 orientation([P, S], O, [P, OS]) :- range(0, 4, O), rotate(S, O, OS).
 orientation([P, S], O, [P, OS]) :- range(1, 5, O1), O is -O1, flipped([P, S], [P, FS]), rotate(FS, O1, OS).
 
 % compatible(+P1, +Side1, +P2, +Side2) is true iff Side1 of piece P1 can be plugged into Side2 of P2
+% compatible/4 uses the prolog predicate nth0 to select the appropriate sides of P1 and P2. The sides are compatible if each slot has exactly one finger, so xorlist is used with one side reversed. Corners are ignored and dealt with by compatible_corner/6.
 compatible([_, Sides1], Side1, [_, Sides2], Side2) :-
 	nth0(Side1, Sides1, [_, F1, F2, F3, F4, _]),
 	nth0(Side2, Sides2, [_, F5, F6, F7, F8, _]),
