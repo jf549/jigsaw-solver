@@ -6,20 +6,21 @@ piece(['Cc', [[0,0,1,1,0,0], [0,0,1,1,0,0], [0,1,0,0,1,0], [0,0,1,1,0,0]]]).
 piece(['98', [[1,1,0,0,1,0], [0,1,0,0,1,0], [0,0,1,1,0,0], [0,0,1,1,0,1]]]).
 piece(['02', [[0,0,1,1,0,0], [0,1,0,0,1,1], [1,0,1,1,0,0], [0,0,1,1,0,0]]]).
 
-% rotate(+A, +N, ?B) is true iff list B is the list A rotated left by N elements
-rotate(A, 0, A).
-rotate([H|T], N, B) :- N > 0, append(T, [H], R), M is N - 1, rotate(R, M, B).
-/*
-?- rotate([1,2,3], 2, [3,1,2]).
-true 
-false.
+% split(+A, +N, ?L, ?R) is true iff list L contains the first N elements of list A and list R contains the rest
+split(A, 0, [], A).
+split([H|T], N, [H|L], R) :- N > 0, N1 is N - 1, split(T, N1, L, R).
 
+% rotate(+A, +N, ?B) is true iff list B is the list A rotated left by N elements
+rotate(A, N, B) :- split(A, N, L, R), append(R, L, B).
+/*
 ?- rotate([1,2,3], 1, [2,3,1]).
-true 
-false.
+true.
 
 ?- rotate([1,2,3], 2, [2,3,1]).
 false.
+
+?- rotate([1,2,3], 2, X).
+X = [3, 1, 2].
 */
 
 % reverse(?A, ?B) is true iff elements in list A are in reverse order when compared to elements in list B
